@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Coverage Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #ffffff;
+            max-width: 600px;
+            margin: 20px auto;
+            box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            transition: border 0.2s;
+        }
+
+        input:focus {
+            border-color: #261640;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #1c1a49;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+
+        button:hover {
+            background-color: #211a55;
+        }
+
+        .response-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .icon {
+            margin-right: 5px;
+        }
+    </style>
+    <script>
+        const backendUrl = "http://localhost:3000"; // Change this to your backend URL
+
+        // Function to fetch and display coverage info based on coverage_id
+        function fetchCoverageInfo() {
+            const coverageId = document.getElementById("coverageId").value;
+
+            fetch(`${backendUrl}/getCoverageInfo`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ coverage_id: coverageId })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Coverage not found");
+                }
+            })
+            .then(data => {
+                const coverageInfo = document.getElementById("coverageInfo");
+                coverageInfo.innerHTML = `
+                    <p><i class="fas fa-id-card icon"></i>Coverage ID: ${data.coverage_id}</p>
+                    <p><i class="fas fa-building icon"></i>Company Name: ${data.company_name}</p>
+                    <p><i class="fas fa-money-bill-alt icon"></i>Coverage Amount: ${data.Coverage_Amount}</p>
+                    <p><i class="fas fa-shield-alt icon"></i>Coverage Type: ${data.Coverage_Type}</p>
+                    <p><i class="fas fa-layer-group icon"></i>Coverage Level: ${data.Coverage_Level}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching coverage information:", error);
+                const coverageInfo = document.getElementById("coverageInfo");
+                coverageInfo.innerText = "Coverage not found.";
+            });
+        }
+
+        // Function to create a new coverage record
+        function createCoverage(event) {
+            event.preventDefault(); // Prevent form submission
+
+            const form = document.getElementById("createForm");
+            const coverageData = {
+                coverage_id: form.coverage_id.value,
+                company_name: form.company_name.value,
+                Coverage_Amount: form.Coverage_Amount.value,
+                Coverage_Type: form.Coverage_Type.value,
+                Coverage_Level: form.Coverage_Level.value
+            };
+
+            fetch(`${backendUrl}/createCoverage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(coverageData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Coverage created successfully.");
+            })
+            .catch(error => {
+                console.error("Error creating coverage:", error);
+                alert("Error creating coverage.");
+            });
+        }
+
+        // Function to update a coverage record
+        function updateCoverage(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("updateForm");
+            const updateData = {
+                coverage_id: form.coverage_id.value,
+                new_company_name: form.new_company_name.value,
+                new_Coverage_Amount: form.new_Coverage_Amount.value,
+                new_Coverage_Type: form.new_Coverage_Type.value,
+                new_Coverage_Level: form.new_Coverage_Level.value
+            };
+
+            fetch(`${backendUrl}/updateCoverage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Coverage updated successfully.");
+                } else {
+                    throw new Error("Error updating coverage.");
+                }
+            })
+            .catch(error => {
+                console.error("Error updating coverage:", error);
+                alert("Error updating coverage.");
+            });
+        }
+
+        // Function to delete a coverage record
+        function deleteCoverage(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("deleteForm");
+            const deleteData = {
+                coverage_id: form.coverage_id.value
+            };
+
+            fetch(`${backendUrl}/deleteCoverage`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Coverage deleted successfully.");
+                } else {
+                    throw new Error("Error deleting coverage.");
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting coverage:", error);
+                alert("Error deleting coverage.");
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Fetch Coverage Information</h2>
+        <div class="form-group">
+            <label for="coverageId"><i class="fas fa-search icon"></i>Enter Coverage ID:</label>
+            <input type="text" id="coverageId">
+        </div>
+        <button onclick="fetchCoverageInfo()"><i class="fas fa-search"></i> Get Coverage Info</button>
+
+        <div class="response-container" id="coverageInfo">
+            <!-- Fetched coverage information will be displayed here -->
+        </div>
+    </div>
+
+    <div class="form-container">
+        <h2>Create Coverage Record</h2>
+        <form id="createForm" onsubmit="createCoverage(event)">
+            <div class="form-group">
+                <label for="coverage_id"><i class="fas fa-id-card icon"></i>Coverage ID:</label>
+                <input type="text" id="coverage_id" required>
+            </div>
+            <div class="form-group">
+                <label for="company_name"><i class="fas fa-building icon"></i>Company Name:</label>
+                <input type="text" id="company_name" required>
+            </div>
+            <div class="form-group">
+                <label for="Coverage_Amount"><i class="fas fa-money-bill-alt icon"></i>Coverage Amount:</label>
+                <input type="number" id="Coverage_Amount" required>
+            </div>
+            <div class="form-group">
+                <label for="Coverage_Type"><i class="fas fa-shield-alt icon"></i>Coverage Type:</label>
+                <input type="text" id="Coverage_Type" required>
+            </div>
+            <div class="form-group">
+                <label for="Coverage_Level"><i class="fas fa-layer-group icon"></i>Coverage Level:</label>
+                <input type="text" id="Coverage_Level" required>
+            </div>
+            <button type="submit"><i class="fas fa-plus-circle icon"></i> Create Coverage</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Update Coverage Record</h2>
+        <form id="updateForm" onsubmit="updateCoverage(event)">
+            <div class="form-group">
+                <label for="coverage_id"><i class="fas fa-edit icon"></i>Coverage ID to Update:</label>
+                <input type="text" id="coverage_id" required>
+            </div>
+            <div class="form-group">
+                <label for="new_company_name"><i class="fas fa-building icon"></i>New Company Name:</label>
+                <input type="text" id="new_company_name">
+            </div>
+            <div class="form-group">
+                <label for="new_Coverage_Amount"><i class="fas fa-money-bill-alt icon"></i>New Coverage Amount:</label>
+                <input type="number" id="new_Coverage_Amount">
+            </div>
+            <div class="form-group">
+                <label for="new_Coverage_Type"><i class="fas fa-shield-alt icon"></i>New Coverage Type:</label>
+                <input type="text" id="new_Coverage_Type">
+            </div>
+            <div class="form-group">
+                <label for "new_Coverage_Level"><i class="fas fa-layer-group icon"></i>New Coverage Level:</label>
+                <input type="text" id="new_Coverage_Level">
+            </div>
+            <button type="submit"><i class="fas fa-edit icon"></i> Update Coverage</button>
+        </form>
+    </div>
+
+    <div class="form-container">
+        <h2>Delete Coverage Record</h2>
+        <form id="deleteForm" onsubmit="deleteCoverage(event)">
+            <div class="form-group">
+                <label for="coverage_id"><i class="fas fa-trash-alt icon"></i>Coverage ID to Delete:</label>
+                <input type="text" id="coverage_id" required>
+            </div>
+            <button type="submit"><i class="fas fa-trash-alt icon"></i> Delete Coverage</button>
+        </form>
+    </div>
+</body>
+</html>

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Application Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome Icons -->
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f5f5; /* Light grey background */
+            color: #333;
+        }
+
+        h1 {
+            text-align: center;
+            color: #333;
+            font-size: 2em;
+            padding: 20px;
+            background-color: #ffffff;
+            margin: 0;
+            border-bottom: 1px solid #ddd;
+        }
+
+        .icon {
+            margin-right: 10px;
+        }
+
+        .form-container {
+            max-width: 800px; /* Increased width */
+            margin: 30px auto; /* Centered with more spacing */
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px; /* More rounded corners */
+            background-color: #ffffff; /* White background */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+        }
+
+        .form-group {
+            margin-bottom: 20px; /* More spacing */
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            font-size: 1.2em; /* Larger font */
+            color: #333; /* Dark grey */
+            margin-bottom: 10px; /* Spacing under label */
+        }
+
+        input {
+            width: 100%; /* Full width */
+            padding: 10px;
+            border: 1px solid #ddd; /* Light grey border */
+            border-radius: 5px; /* Rounded corners */
+            font-size: 1em;
+            transition: border 0.3s ease; /* Smooth transition on focus */
+        }
+
+        input:focus {
+            border-color: #555; /* Darker border on focus */
+            outline: none; /* No default outline */
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #333; /* Dark grey */
+            color: white; /* White text */
+            border: none;
+            border-radius: 5px; /* Rounded corners */
+            font-size: 1.2em; /* Larger font */
+            cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth hover effect */
+        }
+
+        button:hover {
+            background-color: #555; /* Darker grey on hover */
+        }
+
+        .response-container {
+            background-color: #f0f0f0; /* Light grey background */
+            border: 1px solid #ddd; /* Light grey border */
+            padding: 20px;
+            border-radius: 5px; /* Rounded corners */
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1); /* Light shadow */
+            font-size: 1em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1><i class="fas fa-tasks icon"></i>Application Management</h1>
+
+    <!-- Fetching Application Information -->
+    <div class="form-container">
+        <div class="form-group">
+            <label for="applicationId"><i class="fas fa-search icon"></i>Enter Application ID:</label>
+            <input type="text" id="applicationId">
+        </div>
+        <button onclick="fetchApplicationInfo()"><i class="fas fa-search"></i> Get Application Info</button>
+        <div class="response-container" id="applicationInfo">
+            <!-- Application information will be displayed here -->
+        </div>
+    </div>
+
+    <br><br>
+
+
+
+
+    <script>
+        const backendUrl = "http://localhost:3000"; // Update to match your backend service
+
+        // Fetch Application Information
+        function fetchApplicationInfo() {
+            const applicationId = document.getElementById("applicationId").value;
+
+            fetch(`${backendUrl}/fetch-application-info`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ applicationId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const applicationInfoDiv = document.getElementById("applicationInfo");
+                applicationInfoDiv.innerHTML = `
+                    <p><i class="fas fa-id-card icon"></i> Application ID: ${data.application_id}</p>
+                    <p><i class="fas fa-clipboard-list icon"></i> Application Status: ${data.application_status}</p>
+                    <p><i class="fas fa-user icon"></i> Customer ID: ${data.cust_id}</p>
+                    <p><i class="fas fa-car icon"></i> Vehicle ID: ${data.vehicle_id}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching application information:", error);
+                document.getElementById("applicationInfo").innerText = "Error fetching application information.";
+            });
+        }
+
+  
+
+
+    </script>
+
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Premium Payment Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: 'Roboto', 'Arial', sans-serif;
+            background: linear-gradient(to right, #e2e2e2, #c7c7c7);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .form-container {
+            padding: 30px;
+            border: 1px solid #aaa;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.95);
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: left;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.15);
+        }
+
+        h2 {
+            font-size: 24px;
+            text-align: center;
+            color: #34495e;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 16px;
+            color: #34495e;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px;
+            transition: border 0.3s;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #34495e;
+            outline: none;
+        }
+
+        button {
+            padding: 12px 24px;
+            background-color: #140a4a;
+            color: white;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.3s;
+            font-size: 16px;
+            font-weight: bold;
+            display: block;
+            margin: 0 auto;
+        }
+
+        button:hover {
+            background-color: #371852;
+        }
+
+        .response-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: rgba(255, 255, 255, 0.9);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .form-container {
+                padding: 25px;
+            }
+
+            h2 {
+                font-size: 22px;
+            }
+
+            button {
+                width: 100%;
+            }
+        }
+    </style>
+    <script>
+        const backendUrl = "http://localhost:3000"; // Adjust to your backend endpoint
+
+        function fetchPremiumPaymentInfo() {
+            const premiumPaymentId = document.getElementById("premiumPaymentId").value;
+
+            fetch(backendUrl + "/getPremiumPaymentInfo", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ premium_payment_id: premiumPaymentId })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Error fetching premium payment information");
+                }
+            })
+            .then(data => {
+                const premiumPaymentInfo = document.getElementById("premiumPaymentInfo");
+                premiumPaymentInfo.innerHTML = `
+                    <p><i class="fas fa-credit-card icon"></i>Premium Payment ID: ${data.premium_payment_id}</p>
+                    <p><i class="fas fa-user icon"></i>Customer ID: ${data.cust_id}</p>
+                    <p><i class="fas fa-file-contract icon"></i>Policy Number: ${data.policy_number}</p>
+                    <p><i class="fas fa-calendar-alt icon"></i>Premium Payment Schedule: ${data.premium_payment_schedule}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching premium payment information:", error);
+                document.getElementById("premiumPaymentInfo").innerText = "Error fetching premium payment information.";
+            });
+        }
+
+
+        function updatePremiumPayment(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("updateForm");
+            const updateData = {
+                premium_payment_id: form.premium_payment_id.value,
+                new_policy_number: form.new_policy_number.value,
+                new_premium_payment_schedule: form.new_premium_payment_schedule.value,
+            };
+
+            fetch(backendUrl + "/updatePremiumPayment", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Premium payment updated:", data);
+                alert("Premium payment updated successfully");
+            })
+            .catch(error => {
+                console.error("Error updating premium payment:", error);
+                alert("Error updating premium payment");
+            });
+        }
+
+   
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Get Premium Payment Information</h2>
+        <div class="form-group">
+            <label for="premiumPaymentId"><i class="fas fa-search icon"></i>Enter Premium Payment ID:</label>
+            <input type="text" id="premiumPaymentId">
+        </div>
+        <button onclick="fetchPremiumPaymentInfo()"><i class="fas fa-info-circle icon"></i>Get Premium Payment Info</button>
+
+        <div class="response-container" id="premiumPaymentInfo">
+            <!-- Premium payment information will be displayed here -->
+        </div>
+    </div>
+
+
+    <!-- Form for Updating a Premium Payment -->
+    <div class="form-container">
+        <h2>Update Premium Payment</h2>
+        <form id="updateForm" onsubmit="updatePremiumPayment(event)">
+            <div class="form-group">
+                <label for="premium_payment_id"><i class="fas fa-credit-card icon"></i>Premium Payment ID to Update:</label>
+                <input type="text" id="premium_payment_id" required>
+            </div>
+            <div class="form-group">
+                <label for="new_policy_number"><i class="fas fa-file-contract icon"></i>New Policy Number:</label>
+                <input type="text" id="new_policy_number">
+            </div>
+            <div class="form-group">
+                <label for="new_premium_payment_schedule"><i class="fas fa-calendar-alt icon"></i>New Premium Payment Schedule:</label>
+                <input type="text" id="new_premium_payment_schedule">
+            </div>
+            <button type="submit"><i class="fas fa-edit icon"></i>Update Premium Payment</button>
+        </form>
+    </div>
+
+   
+</body>
+</html>

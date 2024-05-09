@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Claim Settlement Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome Icons -->
+    <style>
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            max-width: 600px;
+            margin: 20px auto;
+            text-align: left;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow for depth */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 16px;
+            display: flex;
+            align-items: center; /* Align icon with text */
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 7px; /* Increased border-radius */
+            transition: border 0.3s ease;
+        }
+
+        input:focus {
+            border-color: #181846; /* Green border on focus */
+            outline: none;
+        }
+
+        button {
+            padding: 12px;
+            background-color: #191739; /* Consistent color with input focus */
+            color: white;
+            border: none;
+            border-radius: 7px; /* More rounded */
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            font-size: 16px; /* Increased font size */
+            font-weight: bold;
+            display: flex; /* Align icon with text */
+            align-items: center; /* Center icon and text */
+        }
+
+        button:hover {
+            background-color: #301d50; /* Darker green on hover */
+        }
+
+        .response-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            border-radius: 10px; /* More rounded */
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Add shadow */
+        }
+    </style>
+    <script>
+        const backendUrl = "http://localhost:3000"; // Change to your backend endpoint
+
+        function fetchClaimSettlementInfo() {
+            const claimSettlementId = document.getElementById("claimSettlementId").value;
+
+            fetch(backendUrl + "/getClaimSettlementInfo", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ claim_settlement_id: claimSettlementId })
+            })
+            .then(response => response.json())
+            .then(data => {
+                const claimSettlementInfo = document.getElementById("claimSettlementInfo");
+                claimSettlementInfo.innerHTML = `
+                    <p><i class="fas fa-id-card"></i> Claim Settlement ID: ${data.claim_settlement_id}</p>
+                    <p><i class="fas fa-file-alt"></i> Claim ID: ${data.claim_id}</p>
+                    <p><i class="fas fa-user"></i> Customer ID: ${data.cust_id}</p>
+                    <p><i class="fas fa-car"></i> Vehicle ID: ${data.vehicle_id}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching claim settlement information:", error);
+                document.getElementById("claimSettlementInfo").innerText = "Error fetching claim settlement information.";
+            });
+        }
+
+        function createClaimSettlement(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("createForm");
+            const formData = {
+                claim_settlement_id: form.claim_settlement_id.value,
+                claim_id: form.claim_id.value,
+                cust_id: form.cust_id.value,
+                vehicle_id: form.vehicle_id.value
+            };
+
+            fetch(backendUrl + "/createClaimSettlement", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Claim settlement created successfully");
+                } else {
+                    throw new Error("Error creating claim settlement");
+                }
+            })
+            .catch(error => {
+                console.error("Error creating claim settlement:", error);
+                alert("Error creating claim settlement");
+            });
+        }
+
+        function updateClaimSettlement(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("updateForm");
+            const updateData = {
+                claim_settlement_id: form.claim_settlement_id.value,
+                new_claim_id: form.new_claim_id.value,
+                new_cust_id: form.new_cust_id.value,
+                new_vehicle_id: form.new_vehicle_id.value
+            };
+
+            fetch(backendUrl + "/updateClaimSettlement", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Claim settlement updated successfully");
+                } else {
+                    throw new Error("Error updating claim settlement");
+                }
+            })
+            .catch(error => {
+                console.error("Error updating claim settlement:", error);
+                alert("Error updating claim settlement");
+            });
+        }
+
+        function deleteClaimSettlement(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("deleteForm");
+            const deleteData = {
+                claim_settlement_id: form.claim_settlement_id.value
+            };
+
+            fetch(backendUrl + "/deleteClaimSettlement", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Claim settlement deleted successfully");
+                } else {
+                    throw new Error("Error deleting claim settlement");
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting claim settlement:", error);
+                alert("Error deleting claim settlement");
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2><i class="fas fa-search"></i> Get Claim Settlement Information</h2>
+        <div class="form-group">
+            <label for="claimSettlementId"><i class="fas fa-id-card"></i> Enter Claim Settlement ID:</label>
+            <input type="text" id="claimSettlementId">
+        </div>
+        <button onclick="fetchClaimSettlementInfo()"><i class="fas fa-search"></i> Get Claim Settlement Info</button>
+
+        <div class="response-container" id="claimSettlementInfo">
+            <!-- Claim settlement information will be displayed here -->
+        </div>
+    </div>
+
+    <!-- Form for Creating a New Claim Settlement -->
+    <div class="form-container">
+        <h2><i class="fas fa-plus"></i> Create Claim Settlement</h2>
+        <form id="createForm" onsubmit="createClaimSettlement(event)">
+            <div class="form-group">
+                <label for="claim_settlement_id"><i class="fas fa-id-card"></i> Claim Settlement ID:</label>
+                <input type="text" id="claim_settlement_id" required>
+            </div>
+            <div class="form-group">
+                <label for="claim_id"><i class="fas fa-file-alt"></i> Claim ID:</label>
+                <input type="text" id="claim_id" required>
+            </div>
+            <div class="form-group">
+                <label for="cust_id"><i class="fas fa-user"></i> Customer ID:</label>
+                <input type="text" id="cust_id" required>
+            </div>
+            <div class="form-group">
+                <label for="vehicle_id"><i class="fas fa-car"></i> Vehicle ID:</label>
+                <input type="text" id="vehicle_id" required>
+            </div>
+            <button type="submit"><i class="fas fa-plus"></i> Create Claim Settlement </button>
+        </form>
+    </div>
+
+    <!-- Form for Updating a Claim Settlement -->
+    <div class="form-container">
+        <h2><i class="fas fa-edit"></i> Update Claim Settlement</h2>
+        <form id="updateForm" onsubmit="updateClaimSettlement(event)">
+            <div class="form-group">
+                <label for="claim_settlement_id"><i class="fas fa-id-card"></i> Claim Settlement ID to Update:</label>
+                <input type="text" id="claim_settlement_id" required>
+            </div>
+            <div class="form-group">
+                <label for="new_claim_id"><i class="fas fa-file-alt"></i> New Claim ID:</label>
+                <input type="text" id="new_claim_id">
+            </div>
+            <div class="form-group">
+                <label for="new_cust_id"><i class="fas fa-user"></i> New Customer ID:</label>
+                <input type="text" id="new_cust_id">
+            </div>
+            <div class="form-group">
+                <label for="new_vehicle_id"><i class="fas fa-car"></i> New Vehicle ID:</label>
+                <input type="text" id="new_vehicle_id">
+            </div>
+            <button type="submit"><i class="fas fa-sync-alt"></i> Update Claim Settlement</button>
+        </form>
+    </div>
+
+    <!-- Form for Deleting a Claim Settlement -->
+    <div class="form-container">
+        <h2><i class="fas fa-trash"></i> Delete Claim Settlement</h2>
+        <form id="deleteForm" onsubmit="deleteClaimSettlement(event)">
+            <div class-form-group">
+                <label for="claim_settlement_id"><i class="fas fa-id-card"></i> Claim Settlement ID to Delete:</label>
+                <input type="text" id="claim_settlement_id" required>
+            </div>
+            <button type="submit"><i class="fas fa-trash"></i> Delete Claim Settlement</button>
+        </form>
+    </div>
+</body>
+</html>

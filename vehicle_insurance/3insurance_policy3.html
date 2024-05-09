@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Insurance Policy Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+       body {
+            font-family: 'Roboto', 'Arial', sans-serif;
+            background: linear-gradient(to right, #f2f2f2, #d1d1d1);
+            margin: 0;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .table-container {
+            border: 1px solid #ccc;
+            border-radius: 15px;
+            background-color: rgba(255, 255, 255, 0.95);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            color: #1e272e;
+            font-size: 30px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            text-align: center;
+            color: #34495e;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 16px;
+            color: #2c3e50;
+            margin-bottom: 5px;
+            display: flex;
+            align-items: center;
+        }
+
+        label i {
+            margin-right: 5px;
+        }
+
+        input {
+            width: 800px;
+            padding: 14px;
+            border: 1px solid #aaa;
+            border-radius: 7px;
+            transition: border 0.3s;
+            font-size: 16px;
+        }
+
+        input:focus {
+            border-color: #34495e;
+            outline: none;
+        }
+
+        button, input[type="submit"] {
+            padding: 14px 28px;
+            background-color: #34495e;
+            color: #fff;
+            border: none;
+            border-radius: 7px;
+            cursor: pointer;
+            transition: background 0.3s;
+            text-align: center;
+            display: inline-block;
+            font-size: 16px;
+            font-weight: bold;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #2c3e50;
+        }
+
+        .response-container {
+            padding: 20px;
+            background-color: rgba(255, 255, 255, 0.9);
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+            font-size: 16px;
+        }
+    </style>
+    <script>
+        const backendUrl = "http://localhost:3000"; // Backend URL to match your backend service
+
+        function getPolicyInfo() {
+            const aggrement_id = document.getElementById("aggrement_id").value;
+
+            fetch(backendUrl + "/getPolicyInfo", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ aggrement_id: aggrement_id })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Error fetching policy information");
+                }
+            })
+            .then(data => {
+                const policyInfo = document.getElementById("policyInfo");
+                policyInfo.innerHTML = `
+                    <p>Agreement ID: ${data.aggrement_id}</p>
+                    <p>Application ID: ${data.application_id}</p>
+                    <p>Customer ID: ${data.cust_id}</p>
+                    <p>Department Name: ${data.department_name}</p>
+                    <p>Policy Number: ${data.policy_number}</p>
+                    <p>Start Date: ${data.start_date}</p>
+                    <p>Expiry Date: ${data.expiry_date}</p>
+                    <p>Terms and Conditions: ${data.term_condition_description}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error:", error);
+                document.getElementById("policyInfo").innerText = error.message;
+            });
+        }
+
+        function createPolicy(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("createForm");
+            const formData = {
+                aggrement_id: form.aggrement_id.value,
+                policy_number: form.policy_number.value,
+                start_date: form.start_date.value,
+                cust_id: form.cust_id.value,
+                application_id: form.application_id.value
+            };
+
+            fetch(backendUrl + "/createPolicy", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Policy created:", data);
+            })
+            .catch(error => {
+                console.error("Error creating policy:", error);
+            });
+        }
+
+        function deletePolicy(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("deleteForm");
+            const deleteData = {
+                aggrement_id: form.aggrement_id.value
+            };
+
+            fetch(backendUrl + "/deletePolicy", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log("Policy deleted:", data);
+            })
+            .catch(error => {
+                console.error("Error deleting policy:", error);
+            });
+        }
+    </script>
+</head>
+<body>
+    <div class="container">
+        <div class="table-container">
+            <h2>Fetch Policy Information</h2>
+            <div class="form-group">
+                <label for="aggrement_id"><i class="fas fa-info-circle"></i> Enter Agreement ID:</label>
+                <input type="text" id="aggrement_id">
+            </div>
+            <button onclick="getPolicyInfo()"><i class="fas fa-search"></i> Get Policy Info</button>
+
+            <div class="response-container" id="policyInfo">
+                <!-- Policy information will be displayed here -->
+            </div>
+        </div>
+
+        <div class="table-container">
+            <h2>Create Policy</h2>
+            <form id="createForm" onsubmit="createPolicy(event)">
+                <div class="form-group">
+                    <label for="aggrement_id"><i class="fas fa-file-alt"></i> Agreement ID:</label>
+                    <input type="text" id="aggrement_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="policy_number"><i class="fas fa-file-signature"></i> Policy Number:</label>
+                    <input type="text" id="policy_number" required>
+                </div>
+                <div class="form-group">
+                    <label for="start_date"><i class="far fa-calendar-alt"></i> Start Date:</label>
+                    <input type="text" id="start_date" placeholder="Enter date" required>
+                </div>
+                <div class="form-group">
+                    <label for="cust_id"><i class="fas fa-user"></i> Customer ID:</label>
+                    <input type="text" id="cust_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="application_id"><i class="fas fa-file"></i> Application ID:</label>
+                    <input type="text" id="application_id" required>
+                </div>
+                <button type="submit"><i class="fas fa-plus-circle icon"></i> Create Policy</button>
+            </form>
+        </div>
+
+       
+
+        <div class="table-container">
+            <h2>Delete Policy</h2>
+            <form id="deleteForm" onsubmit="deletePolicy(event)">
+                <div class="form-group">
+                    <label for="aggrement_id"><i class="fas fa-trash"></i> Agreement ID to Delete:</label>
+                    <input type="text" id="aggrement_id" required>
+                </div>
+                <button type="submit"><i class="fas fa-trash-alt"></i> Delete Policy</button>
+            </form>
+        </div>
+    </div>
+</body>
+</html>

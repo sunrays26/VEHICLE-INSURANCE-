@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Customer Information</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome Icons -->
+    <style>
+        .container {
+            width: 80%;
+            margin: 20px auto;
+        }
+
+        .form-container {
+            width: 70%;
+            margin-bottom: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 10px;
+            background-color: #f9f9f9;
+        }
+
+        h1 {
+            color: #695e94;
+            margin-bottom: 10px;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            font-size: 1.2em;
+            margin-bottom: 5px;
+            display: block;
+            color: #333;
+        }
+
+        input[type="text"],
+        input[type="email"] {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #695e94;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1em;
+        }
+
+        button:hover {
+            background-color: #2f2777;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 10px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #695e94;
+            color: white;
+        }
+
+        /* Added icon styles */
+        .icon {
+            margin-right: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Original Section for Fetching Customer Info -->
+        <div class="form-container">
+            <h1><i class="fas fa-user icon"></i>Customer Information</h1>
+            <label for="customerName">Enter Customer Name:</label>
+            <input type="text" id="customerName">
+            <button onclick="fetchCustomerInfo()"><i class="fas fa-info icon"></i> Get Customer Info</button>
+            <div id="customerInfo"></div>
+        </div>
+
+        <!-- Original Form to Create New Customer -->
+        <div class="form-container">
+            <h1><i class="fas fa-user-plus icon"></i>Create Customer</h1>
+            <form id="customerForm" onsubmit="submitForm(event)">
+                <div class="form-group">
+                    <label for="cust_id">Customer ID:</label>
+                    <input type="text" name="cust_id" id="cust_id" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_fname">First Name:</label>
+                    <input type="text" name="cust_fname" id="cust_fname" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_lname">Last Name:</label>
+                    <input type="text" name="cust_lname" id="cust_lname" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_dob">Date of Birth:</label>
+                    <input type="text" name="cust_dob" id="cust_dob" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_mob_number">Mobile Number:</label>
+                    <input type="text" name="cust_mob_number" id="cust_mob_number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_gender">Gender:</label>
+                    <input type="text" name="cust_gender" id="cust_gender" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_email">Email:</label>
+                    <input type="email" name="cust_email" id="cust_email" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_marital_status">Marital Status:</label>
+                    <input type="text" name="cust_marital_status" id="cust_marital_status" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_pps_number">PPS Number:</label>
+                    <input type="text" name="cust_pps_number" id="cust_pps_number" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="cust_passport_number">Passport Number:</label>
+                    <input type="text" name="cust_passport_number" id="cust_passport_number" required>
+                </div>
+
+                <button type="submit"><i class="fas fa-paper-plane icon"></i> Create Customer</button>
+            </form>
+        </div>
+
+        <!-- New Section for Updating Customer -->
+        <div class="form-container">
+            <h1><i class="fas fa-user-edit icon"></i>Update Customer</h1>
+            <form id="updateForm" onsubmit="updateCustomer(event)">
+                <div class="form-group">
+                    <label for="update_cust_id">Customer ID to Update:</label>
+                    <input type="text" name="update_cust_id" id="update_cust_id" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="update_cust_fname">New First Name:</label>
+                    <input type="text" name="update_cust_fname" id="update_cust_fname">
+                </div>
+
+                <div class="form-group">
+                    <label for="update_cust_lname">New Last Name:</label>
+                    <input type="text" name="update_cust_lname" id="update_cust_lname">
+                </div>
+
+                <div class="form-group">
+                    <label for="update_cust_dob">New Date of Birth:</label>
+                    <input type="text" name="update_cust_dob" id="update_cust_dob">
+                </div>
+
+                <div class="form-group">
+                    <label for="update_cust_mob_number">New Mobile Number:</label>
+                    <input type="text" name="update_cust_mob_number" id="update_cust_mob_number">
+                </div>
+                <button type="submit"><i class="fas fa-edit icon"></i> Update Customer</button>
+            </form>
+        </div>
+
+        <!-- New Section for Deleting Customer -->
+        <div class="form-container">
+            <h1><i class="fas fa-user-times icon"></i>Delete Customer</h1>
+            <form id="deleteForm" onsubmit="deleteCustomer(event)">
+                <div class="form-group">
+                    <label for="delete_cust_id">Customer ID to Delete:</label>
+                    <input type="text" name="delete_cust_id" id="delete_cust_id" required>
+                </div>
+
+                <button type="submit"><i class="fas fa-trash-alt icon"></i> Delete Customer</button>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function fetchCustomerInfo() {
+            const customerName = document.getElementById("customerName").value;
+            // Example backend URL - update this to match your backend service
+            const backendUrl = "http://localhost:3000/";
+
+            fetch(backendUrl, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ name: customerName })
+            })
+            .then(response => response.json())
+            .then(data => {
+                document.getElementById("customerInfo").innerHTML = `
+                    <table>
+                        <tr><th><i class="fas fa-info-circle icon"></i> Field</th><th>Value</th></tr>
+                        <tr><td><i class="fas fa-id-card icon"></i> Customer ID</td><td>${data.cust_id}</td></tr>
+                        <tr><td><i class="fas fa-user icon"></i> First Name</td><td>${data.cust_fname}</td></tr>
+                        <tr><td><i class="fas fa-user icon"></i> Last Name</td><td>${data.cust_lname}</td></tr>
+                        <tr><td><i class="fas fa-calendar-alt icon"></i> Date of Birth</td><td>${data.cust_dob}</td></tr>
+                        <tr><td><i class="fas fa-venus-mars icon"></i> Gender</td><td>${data.cust_gender}</td></tr>
+                        <tr><td><i class="fas fa-phone-alt icon"></i> Mobile Number</td><td>${data.cust_mob_number}</td></tr>
+                        <tr><td><i class="fas fa-envelope icon"></i> Email</td><td>${data.cust_email}</td></tr>
+                        <tr><td><i class="fas fa-ring icon"></i> Marital Status</td><td>${data.cust_marital_status}</td></tr>
+                        <tr><td><i class="fas fa-id-badge icon"></i> PPS Number</td><td>${data.cust_pps_number}</td></tr>
+                        <tr><td><i class="fas fa-passport icon"></i> Passport Number</td><td>${data.cust_passport_number}</td></tr>
+                    </table>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching customer information:", error);
+                document.getElementById("customerInfo").innerText = "Error fetching customer information.";
+            });
+        }
+
+        function submitForm(event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
+
+            const form = document.getElementById('customerForm');
+
+            const formData = {
+                cust_id: form.cust_id.value,
+                cust_fname: form.cust_fname.value,
+                cust_lname: form.cust_lname.value,
+                cust_dob: form.cust_dob.value,
+                cust_mob_number: form.cust_mob_number.value,
+                cust_gender: form.cust_gender.value,
+                cust_email: form.cust_email.value,
+                cust_martial_status: form.cust_marital_status.value,
+                cust_pps_number: form.cust_pps_number.value,
+                cust_passport_number: form.cust_passport_number.value
+            };
+
+            fetch('http://localhost:3000/submit', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Customer created:', data);
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        }
+
+        function updateCustomer(event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
+
+            const form = document.getElementById('updateForm');
+
+            const updateData = {
+                update_cust_id: form.update_cust_id.value,
+                update_cust_fname: form.update_cust_fname.value,
+                update_cust_lname: form.update_cust_lname.value,
+                update_cust_dob: form.update_cust_dob.value,
+                update_cust_mob_number: form.update_cust_mob_number.value
+            };
+
+            fetch('http://localhost:3000/updateCustomer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updateData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Customer updated:', data);
+            })
+            .catch((error) => {
+                console.error('Error updating customer:', error);
+            });
+        }
+
+        function deleteCustomer(event) {
+            event.preventDefault(); // Prevent the form from refreshing the page
+
+            const form = document.getElementById('deleteForm');
+
+            const deleteData = {
+                delete_cust_id: form.delete_cust_id.value
+            };
+
+            fetch('http://localhost:3000/deleteCustomer', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                console.log('Customer deleted:', data);
+            })
+            .catch((error) => {
+                console.error('Error deleting customer:', error);
+            });
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Velocity Motors</title>
+  <link rel="stylesheet" href="styles.css"> <!-- Linking the CSS file -->
+</head>
+<body>
+  <header>
+    <nav>
+      <a href="#" id="homeLink">Home</a>
+  </nav>
+  
+  <div class="he">
+  <button id="openAbout">About</button>
+  <button id="openContact">Contact Us</button>
+  <button id="openSupport">Support</button>
+  <button id="openClaim">Claims</button>
+</div>
+</header>
+
+<div id="aboutPopup" class="popup">
+  <div class="popup-content">
+      <h2>About</h2>
+      <p>"Company is a leading vehicle insurance provider, offering tailored coverage for cars, motorcycles, trucks, and more. Since [Year], we've been committed to customer satisfaction, providing flexible policies to fit various needs and budgets.
+
+        Our experienced agents are dedicated to making the insurance process easy and stress-free, from selecting a policy to handling claims quickly and efficiently. We prioritize technology with our user-friendly online platform, enabling you to manage your policy, make payments, and file claims anytime, anywhere."</p>
+      <button id="closeAbout">Close</button>
+  </div>
+</div>
+<div id="contactPopup" class="popup">
+  <div class="popup-content">
+      <h2>Contact Us</h2>
+      <p>This is the Contact Us pop-up content.</p>
+      <button id="closeContact">Close</button>
+  </div>
+</div>
+<div id="supportPopup" class="popup">
+  <div class="popup-content">
+      <h2>Support</h2>
+      <p>This is the Support pop-up content.</p>
+      <button id="closeSupport">Close</button>
+  </div>
+</div>  
+<div id="claimPopup" class="popup">
+  <div class="popup-content">
+      <h2>Support</h2>
+      <p>This is the Support pop-up content.</p>
+      <button id="closeClaim">Close</button>
+  </div>
+</div> 
+  <section class="bak">
+    <div class="text-overlay">
+      <h1>Vehicle Insurance</h1>
+      <p>"Where peace of mind meets the open road. Explore tailored coverage options that put you in the driver's seat of safety."</p>
+    </div>
+  </section>
+<section class="back">
+    <div class="login-section">
+      <h2>LOGIN AS</h2>
+      <button id="openCustomers">Customers</button>
+      <button id="openInsurance">Insurance agent</button>
+      <button id="openData">Database administrator</button>
+      </div>
+
+      <div id="CustomersPopup" class="popup">
+        <div class="popups-content">
+          <h2>Customer interfaces</h2>
+         <a href="logincustomer.html"> Login showPage</a>
+         <form action="login.php" method="POST">
+          <input type="text" name="username" placeholder="Username" required>
+          <input type="password" name="password" placeholder="Password" required>
+          <button type="submit">Login</button>
+        </form>
+            <button id="closeCustomers">Close</button>
+        </div>
+      </div> 
+      <div id="InsurancePopup" class="popup">
+        <div class="popups-content">
+            <h2>Insurance agent interfaces </h2>
+            <a href="logininsurance.html">Original showPage</a>
+            <form action="login.php" method="POST">
+              <input type="text" name="username" placeholder="Username" required>
+              <input type="password" name="password" placeholder="Password" required>
+              <button type="submit">Login</button>
+            </form>
+            <button id="closeInsurance">Close</button>
+        </div>
+      </div>
+     <div id="DataPopup" class="popup">
+        <div class="popups-content">
+            <h2>Database administrator</h2>
+            <!-- <p>This is the Support pop-up content.</p> -->
+            <a href="logindatabase.html">Original showPage</a>
+            <form action="login.php" method="POST">
+              <input type="text" name="username" placeholder="Username" required>
+              <input type="password" name="password" placeholder="Password" required>
+              <button type="submit">Login</button>
+            </form>
+            <button id="closeData">Close</button>
+        </div>
+      </div> 
+     
+</section>
+  
+  <script src="Script.js"></script>
+    
+</body>
+</html>

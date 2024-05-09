@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Policy Renewal Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"> <!-- Font Awesome Icons -->
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #eceff1; /* Blue-grey background */
+            color: #333; /* Dark text */
+        }
+
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #f0f0f0;
+            max-width: 600px;
+            margin: auto;
+            text-align: left;
+            box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 30px; /* Gap between sections */
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 8px;
+        }
+
+        input {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #ffffff;
+        }
+
+        button {
+            padding: 10px 20px;
+            background-color: #2f2160;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: #312566;
+        }
+
+        .response-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f1f1f1;
+            border-radius: 5px;
+        }
+    </style>
+    <script>
+        const serverEndpoint = "http://localhost:3000"; // Adjust to your backend endpoint
+
+        // Fetch policy renewal info by policy_renewable_id
+        function getPolicyRenewable() {
+            const policyRenewableId = document.getElementById("policyRenewableId").value;
+
+            fetch(serverEndpoint + "/getPolicyRenewable", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ policy_renewable_id: policyRenewableId })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Error fetching policy renewable information");
+                }
+            })
+            .then(data => {
+                const policyData = document.getElementById("policyData");
+                policyData.innerHTML = `
+                    <p><i class="fas fa-info-circle"></i> Policy Renewable ID: ${data.policy_renewable_id}</p>
+                    <p><i class="fas fa-user"></i> Customer ID: ${data.cust_id}</p>
+                    <p><i class="fas fa-calendar"></i> Date of Renewal: ${data.Date_Of_Renewal}</p>
+                    <p><i class="fas fa-tag"></i> Type of Renewal: ${data.Type_Of_Renewal}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching policy renewable:", error);
+                document.getElementById("policyData").innerText = "Error fetching policy renewable information.";
+            });
+        }
+
+   
+
+        // Update an existing policy renewal
+        function updatePolicyRenewal(event) {
+            event.preventDefault();
+
+            const updateForm = document.getElementById("updateForm");
+            const updatePolicyData = {
+                policy_renewable_id: updateForm.policy_renewable_id.value,
+                cust_id: updateForm.new_cust_id.value,
+                Date_Of_Renewal: updateForm.new_Date_Of_Renewal.value,
+                Type_Of_Renewal: updateForm.new_Type_Of_Renewal.value
+            };
+
+            fetch(serverEndpoint + "/updatePolicyRenewal", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(updatePolicyData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Policy renewal updated successfully");
+            })
+            .catch(error => {
+                console.error("Error updating policy renewal:", error);
+                alert("Error updating policy renewable");
+            });
+        }
+
+    
+    </script>
+</head>
+<body>
+    <div class="form-container">
+        <h2><i class="fas fa-info-circle"></i> Get Policy Renewable Information</h2>
+        <div class="form-group">
+            <label for="policyRenewableId"><i class="fas fa-search"></i> Enter Policy Renewable ID:</label>
+            <input type="text" id="policyRenewableId">
+        </div>
+        <button onclick="getPolicyRenewable()"><i class="fas fa-search"></i> Get Policy Info</button>
+
+        <div class="response-container" id="policyData">
+            <!-- Policy information will be displayed here -->
+        </div>
+    </div>
+
+
+
+    <!-- Form for Updating a Policy Renewable -->
+    <div class="form-container">
+        <h2><i class="fas fa-edit"></i> Edit Policy Renewable</h2>
+        <form id="updateForm" onsubmit="updatePolicyRenewal(event)">
+            <div class="form-group">
+                <label for="policy_renewable_id"><i class="fas fa-receipt"></i> Policy Renewable ID to Update:</label>
+                <input type="text" id="policy_renewable_id" required>
+            </div>
+            <div class="form-group">
+                <label for="new_cust_id"><i class="fas fa-user"></i> New Customer ID:</label>
+                <input type="text" id="new_cust_id">
+            </div>
+            <div class="form-group">
+                <label for="new_Date_Of_Renewal"><i class="fas fa-calendar"></i> New Date of Renewal:</label>
+                <input type="date" id="new_Date_Of_Renewal">
+            </div>
+            <div class="form-group">
+                <label for="new_Type_Of_Renewal"><i class="fas fa-tag"></i> New Type of Renewal:</label>
+                <input type="text" id="new_Type_Of_Renewal">
+            </div>
+            <button type="submit"><i class="fas fa-edit"></i> Edit Policy Renewable</button>
+        </form>
+    </div>
+
+
+</body>
+</html>
+/// isko aise hi rkh

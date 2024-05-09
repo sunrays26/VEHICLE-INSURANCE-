@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Entity Navigation - Blue Grey Theme</title>
+    <!-- Load Material Icons -->
+    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+    <!-- Use a CSS framework for modern styling and responsiveness -->
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.3/dist/tailwind.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles for a blue-grey theme */
+        body {
+            background-color: #f0f4f8; /* Light blue-grey background for the page */
+            font-family: 'Roboto', sans-serif; /* Modern font */
+            padding: 30px; /* Spacing */
+        }
+
+        .modules {
+            max-width: 800px; /* Centered, max width for better readability */
+            margin: 60px auto; /* Auto centering */
+            background-color: #d9e2ec; /* Slightly darker blue-grey background for modules */
+            padding: 40px; /* Padding for comfort */
+            border-radius: 15px; /* Soft corners */
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2); /* Subtle shadow for effect */
+            transition: transform 0.3s; /* Smooth hover effect */
+        }
+
+        .modules:hover {
+            transform: scale(1.05); /* Scale up on hover */
+        }
+
+        .modules h1 {
+            text-align: center; /* Centered title */
+            font-size: 2.5em; /* Large font for emphasis */
+            font-weight: bold; /* Bold for impact */
+            color: #2c3e50; /* Dark text for contrast */
+            margin-bottom: 30px; /* Margin for spacing */
+        }
+
+        .modules a {
+            display: flex; /* Flex layout */
+            align-items: center; /* Center-align items */
+            padding: 16px; /* Padding for comfort */
+            text-decoration: none; /* No underline */
+            font-weight: bold; /* Bold links */
+            color: #2c3e50; /* Dark grey text for readability */
+            border-bottom: 2px solid #bdc3c7; /* Light blue-grey border for separation */
+            transition: background-color 0.3s, color 0.3s; /* Smooth transitions */
+        }
+
+        .modules a:hover {
+            background-color: #bdc3c7; /* Darker blue-grey background on hover */
+            color: #2c3e50; /* Dark text for contrast */
+        }
+
+        .modules a:last-child {
+            border-bottom: none; /* No border for last link */
+        }
+
+        .icon {
+            margin-right: 12px; /* Spacing between icon and text */
+        }
+    </style>
+</head>
+<body>
+    <div class="modules">
+        <h1>Entity Navigation</h1>
+        <a href="1customer1.html"><span class="icon material-icons">person</span>Customer</a>
+        <a href="2application1.html"><span class="icon material-icons">assignment</span>Application</a>
+        <a href="3insurance_policy1.html"><span class="icon material-icons">policy</span>Insurance Policy</a>
+        <a href="4premium_payment1.html"><span class="icon material-icons">payment</span>Premium Payment</a>
+        <a href="5claim_settlement1.html"><span class="icon material-icons">gavel</span>Claim Settlement</a>
+        <a href="6office1.html"><span class="icon material-icons">business</span>Office</a>
+        <a href="7membership1.html"><span class="icon material-icons">card_membership</span>Membership</a>
+        <!-- <a href="8nok1.html"><span class="icon material-icons">group</span>Next of Kin</a> -->
+        <a href="9policy_renewal1.html"><span class="icon material-icons">loop</span>Policy Renewal</a>
+        <a href="10coverage1.html"><span class="icon material-icons">shield</span>Coverage</a>
+        <a href="11product1.html"><span class="icon material-icons">widgets</span>Product</a>
+        <a href="12receipt1.html"><span class="icon material-icons">receipt</span>Receipt</a>
+    </div>
+
+    <!-- Include JavaScript framework and additional scripts -->
+    <script src="Script.js"></script> 
+</body>
+</html>

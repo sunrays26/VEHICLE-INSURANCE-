@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Membership Management</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f0f5f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        .form-container {
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 10px;
+            background-color: #fff;
+            max-width: 600px;
+            margin: auto;
+            text-align: left;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            font-weight: bold;
+            color: #333;
+        }
+
+        input[type="text"] {
+            width: calc(100% - 16px);
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button, input[type="submit"] {
+            padding: 10px 20px;
+            background-color: #112633;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover, input[type="submit"]:hover {
+            background-color: #1e3849;
+        }
+
+        .response-container {
+            margin-top: 20px;
+            padding: 15px;
+            border: 1px solid #ccc;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+        }
+
+        .icon {
+            margin-right: 10px;
+        }
+    </style>
+    <script>
+        const backendUrl = "http://localhost:3000"; // Change to your backend URL
+
+        function fetchMembershipInfo() {
+            const membershipId = document.getElementById("membershipId").value;
+
+            fetch(backendUrl + "/getMembershipInfo", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ membership_id: membershipId })
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.json();
+                } else {
+                    throw new Error("Error fetching membership information");
+                }
+            })
+            .then(data => {
+                const membershipInfo = document.getElementById("membershipInfo");
+                membershipInfo.innerHTML = `
+                    <p><i class="fas fa-id-card icon"></i>Membership ID: ${data.membership_id}</p>
+                    <p><i class="fas fa-user icon"></i>Customer ID: ${data.cust_id}</p>
+                `;
+            })
+            .catch(error => {
+                console.error("Error fetching membership information:", error);
+                document.getElementById("membershipInfo").innerText = "Error fetching membership information.";
+            });
+        }
+
+        function deleteMembership(event) {
+            event.preventDefault();
+
+            const form = document.getElementById("deleteForm");
+            const deleteData = {
+                membership_id: form.membership_id.value
+            };
+
+            fetch(backendUrl + "/deleteMembership", {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(deleteData)
+            })
+            .then(response => {
+                if (response.ok) {
+                    alert("Membership deleted successfully");
+                } else {
+                    throw new Error("Error deleting membership");
+                }
+            })
+            .catch(error => {
+                console.error("Error deleting membership:", error);
+                alert("Error deleting membership");
+            });
+        }
+    </script>
+</head>
+<body>
+    <!-- Form to Get Membership Information -->
+    <div class="form-container">
+        <h2>Get Membership Information</h2>
+        <div class="form-group">
+            <label for="membershipId"><i class="fas fa-search icon"></i>Enter Membership ID:</label>
+            <input type="text" id="membershipId">
+        </div>
+        <button onclick="fetchMembershipInfo()"><i class="fas fa-info-circle icon"></i>Get Membership Info</button>
+
+        <div class="response-container" id="membershipInfo">
+            <!-- Membership information will be displayed here -->
+        </div>
+    </div>
+
+
+    <!-- Form to Delete a Membership -->
+    <div class="form-container">
+        <h2>Delete Membership</h2>
+        <form id="deleteForm" onsubmit="deleteMembership(event)">
+            <div class="form-group">
+                <label for="membership_id"><i class="fas fa-trash-alt icon"></i>Membership ID to Delete:</label>
+                <input type="text" id="membership_id" required>
+            </div>
+            <button type="submit"><i class="fas fa-trash icon"></i>Delete Membership</button>
+        </form>
+    </div>
+</body>
+</html>
